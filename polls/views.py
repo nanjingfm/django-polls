@@ -36,9 +36,10 @@ def saveVote(request):
         else:
             choice.votes += 1
             choice.save()
-            return HttpResponseRedirect(reverse('polls:index'))
+            return HttpResponseRedirect(reverse('polls:detail', args=(question_id,)))
 
-def detail(request):
+def detail(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
     return render(request, "detail.html", {
-        'question': '111'
+        'question': question
     })

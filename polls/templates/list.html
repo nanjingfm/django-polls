@@ -15,6 +15,7 @@
                 </p>
                 <p style="color: #a29b9b; height: 20px; padding-top: 15px;">
                     <span class="glyphicon glyphicon-object-align-bottom pull-left"> 共{{ question.getVotesNum }}人完成投票</span>
+                    <span class="glyphicon glyphicon-eye-open pull-left" style="margin-left: 20px;"> <a href="{% url 'polls:detail' question.id %}">查看投票结果</a></span>
                     <span class="glyphicon glyphicon-time pull-right"> {{ question.pub_date }}</span>
                 </p>
             </li>

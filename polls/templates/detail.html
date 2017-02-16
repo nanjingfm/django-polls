@@ -2,32 +2,69 @@
 
 {% block content %}
 <script src="//cdn.bootcss.com/echarts/3.4.0/echarts.common.min.js"></script>
-<div id="main" style="width: 600px;height:400px;"></div>
+<div class="row">
+    <div class="col-xs-12" style="text-align: center"><h3>{{ question.question_text }}<small> 投票结果</small></h3></div>
+    <div id="bar" class="col-md-6" style="height:400px;margin-bottom: 40px;"></div>
+    <div id="pie" class="col-md-6" style="height:400px;margin-bottom: 40px;"></div>
+</div>
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('main'));
+    var myChart = echarts.init(document.getElementById('bar'));
 
     // 指定图表的配置项和数据
     var option = {
-        title: {
-            text: 'ECharts 入门示例'
-        },
         tooltip: {},
         legend: {
-            data:['销量']
+            data:['投票数'],
+            right: '20'
         },
         xAxis: {
-            data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+            data: [{% for choice in question.choice_set.all %}"{{ choice.choice_text }}",{% endfor %}]
         },
         yAxis: {},
         series: [{
-            name: '销量',
+            name: '投票数',
             type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
+            data: [{% for choice in question.choice_set.all %}"{{ choice.votes }}",{% endfor %}]
         }]
     };
 
-    // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
+
+    var myChart2 = echarts.init(document.getElementById('pie'));
+    var option2 = {
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            right: 'right',
+            data: [{% for choice in question.choice_set.all %}"{{ choice.choice_text }}",{% endfor %}]
+        },
+        series : [
+            {
+                name: '投票比例',
+                type: 'pie',
+                radius : '55%',
+                center: ['50%', '60%'],
+                data:[
+                    {% for choice in question.choice_set.all %}
+                        {value:{{ choice.votes }}, name:'{{ choice.choice_text }}'},
+                    {% endfor %}
+                ],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart2.setOption(option2, true);
 </script>
 {%  endblock %}
