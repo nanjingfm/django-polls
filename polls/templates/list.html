@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if questions %}
+        {% for question in questions %}
+        <ul class="list-group">
+            <li class="list-group-item">
+                <span class="badge visible-lg">{{ question.getVotesNum }}</span>
+                <h3 class="list-group-item-heading"><a href="{% url 'polls:vote' question.id %}">{{ question.question_text }}</a></h3>
+                {% if question.hasImg %}
+                    <img class="img-responsive" style="max-height: 230px; margin-bottom: 10px; margin-top: 20px; border-radius: 10px;" src="/media/{{ question.img }}">
+                {% endif %}
+                <p class="list-group-item-text">
+                    {{ question.desc_text }}
+                </p>
+                <p style="color: #a29b9b; height: 20px; padding-top: 15px;">
+                    <span class="glyphicon glyphicon-object-align-bottom pull-left"> 共{{ question.getVotesNum }}人完成投票</span>
+                    <span class="glyphicon glyphicon-time pull-right"> {{ question.pub_date }}</span>
+                </p>
+            </li>
+        </ul>
+        {% endfor %}
+    {% else %}
+        <h3>暂无最新投票</h3>
+    {% endif %}
+{% endblock %}

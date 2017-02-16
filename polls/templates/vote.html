@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if question %}
+
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <h1>{{ question.question_text }}</h1>
+                <form action="{% url 'polls:savevote' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="question_id" value="{{ question.id }}">
+                    <ul class="list-group">
+                        {% for choice in question.choice_set.all %}
+                            <li class="list-group-item">
+                                <input type="radio" name="choice_id" value="{{ choice.id }}">
+                                {{ choice.choice_text }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <h3>暂无最新投票</h3>
+    {% endif %}
+{% endblock %}
