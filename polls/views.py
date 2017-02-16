@@ -8,7 +8,7 @@ from .models import Question, Choice
 
 @require_http_methods(['GET'])
 def index(request):
-    questions = Question.objects.order_by('-pub_date')[:5]
+    questions = Question.objects.order_by('-pub_date').filter(status=1)[:5]
     return render(request, "list.html", {
         'questions': questions
     })

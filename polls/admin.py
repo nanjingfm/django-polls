@@ -7,7 +7,7 @@ class ChoiceInline(admin.TabularInline):
     extra = 3
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('question_text', 'pub_date',)
+    list_display = ('question_text', 'pub_date', 'status')
     inlines = [ChoiceInline]
 
 
