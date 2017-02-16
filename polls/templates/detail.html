@@ -1,70 +1,112 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<script src="//cdn.bootcss.com/echarts/3.4.0/echarts.common.min.js"></script>
-<div class="row">
-    <div class="col-xs-12" style="text-align: center"><h3>{{ question.question_text }}<small> 投票结果</small></h3></div>
-    <div id="bar" class="col-md-6" style="height:400px;margin-bottom: 40px;"></div>
-    <div id="pie" class="col-md-6" style="height:400px;margin-bottom: 40px;"></div>
-</div>
-<script type="text/javascript">
-    // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('bar'));
+    <script src="//cdn.bootcss.com/echarts/3.4.0/echarts.common.min.js"></script>
+    <div class="row">
+        <div class="col-xs-12" style="text-align: center">
+            <h3><a href="{% url 'polls:vote' question.id %}">{{ question.question_text }}</a>
+                <small> 投票结果</small>
+            </h3>
+        </div>
+        <div id="bar" class="col-md-6" style="height:400px;margin-bottom: 40px;"></div>
+        <div id="pie" class="col-md-6" style="height:400px;margin-bottom: 40px;"></div>
+    </div>
+    <script type="text/javascript">
+        var colorList = [
+            '#C1232B', '#B5C334', '#FCCE10', '#E87C25', '#27727B',
+            '#FE8463', '#9BCA63', '#FAD860', '#F3A43B', '#60C0DD',
+            '#D7504B', '#C6E579', '#F4E001', '#F0805A', '#26C0C0'
+        ];
 
-    // 指定图表的配置项和数据
-    var option = {
-        tooltip: {},
-        legend: {
-            data:['投票数'],
-            right: '20'
-        },
-        xAxis: {
-            data: [{% for choice in question.choice_set.all %}"{{ choice.choice_text }}",{% endfor %}]
-        },
-        yAxis: {},
-        series: [{
-            name: '投票数',
-            type: 'bar',
-            data: [{% for choice in question.choice_set.all %}"{{ choice.votes }}",{% endfor %}]
-        }]
-    };
+        var labels = [{% for choice in question.choice_set.all %}"{{ choice.choice_text }}",{% endfor %}];
+        var datas = [{% for choice in question.choice_set.all %}"{{ choice.votes }}",{% endfor %}];
 
-    myChart.setOption(option);
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('bar'));
 
-    var myChart2 = echarts.init(document.getElementById('pie'));
-    var option2 = {
-        tooltip : {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-        legend: {
-            orient: 'vertical',
-            right: 'right',
-            data: [{% for choice in question.choice_set.all %}"{{ choice.choice_text }}",{% endfor %}]
-        },
-        series : [
-            {
-                name: '投票比例',
-                type: 'pie',
-                radius : '55%',
-                center: ['50%', '60%'],
-                data:[
-                    {% for choice in question.choice_set.all %}
-                        {value:{{ choice.votes }}, name:'{{ choice.choice_text }}'},
-                    {% endfor %}
-                ],
+        // 指定图表的配置项和数据
+        var option = {
+            tooltip: {
+                trigger: 'item'
+            },
+            calculable: true,
+            legend: {
+                data: ['投票数'],
+                right: '20'
+            },
+            xAxis: {
+                axisLabel: {
+                    textStyle: {
+                        fontSize: 16
+                    }
+                },
+                type: 'category',
+                data: labels
+            },
+            yAxis: {
+                type: 'value',
+                show: false
+            },
+            series: [{
+                name: '投票数',
+                type: 'bar',
                 itemStyle: {
-                    emphasis: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    normal: {
+                        color: function (params) {
+                            // build a color map as your need.
+                            return colorList[params.dataIndex]
+                        },
+                        label: {
+                            show: true,
+                            position: 'top',
+                            formatter: '{c}'
+                        }
+                    }
+                },
+                data: datas
+            }]
+        };
+
+        myChart.setOption(option);
+
+        var myChart2 = echarts.init(document.getElementById('pie'));
+        var option2 = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                right: 'right',
+                data: labels
+            },
+            series: [
+                {
+                    name: '投票比例',
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    data: [
+                        {% for choice in question.choice_set.all %}
+                            {value:{{ choice.votes }}, name: '{{ choice.choice_text }}'},
+                        {% endfor %}
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        },
+                        color: function (params) {
+                            // build a color map as your need.
+                            return colorList[params.dataIndex]
+                        }
                     }
                 }
-            }
-        ]
-    };
+            ]
+        };
 
-    // 使用刚指定的配置项和数据显示图表。
-    myChart2.setOption(option2, true);
-</script>
-{%  endblock %}
+        // 使用刚指定的配置项和数据显示图表。
+        myChart2.setOption(option2, true);
+    </script>
+{% endblock %}
