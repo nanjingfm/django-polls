@@ -35,9 +35,6 @@ class Question(models.Model):
     def isChildChoice(self, choice_id):
         return self.choice_set.get(pk=choice_id)
 
-    def getActiveQuestion(self):
-        return self.objects.order_by('-pub_date').filter(status=self.ACTIVE)
-
     class Meta:
         verbose_name = '投票问题'
         verbose_name_plural = '投票问题'

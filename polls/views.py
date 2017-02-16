@@ -8,7 +8,7 @@ from .models import Question, Choice
 
 @require_http_methods(['GET'])
 def index(request):
-    questions = Question.objects.order_by('-pub_date').filter(status=1)[:5]
+    questions = Question.objects.order_by('-pub_date').filter(status=Question.ACTIVE)[:5]
     return render(request, "list.html", {
         'questions': questions
     })
@@ -43,3 +43,14 @@ def detail(request, question_id):
     return render(request, "detail.html", {
         'question': question
     })
+
+def search(request):
+    keywords = request.POST.get('keywords', None)
+    if keywords is not None:
+        questions = Question.objects.order_by('-pub_date').filter(question_text__contains=keywords.strip(' '))
+        return render(request, "list.html", {
+            'questions': questions,
+            'searchkeywords': keywords
+        })
+    else:
+        return HttpResponseRedirect(reverse('polls:index'))
