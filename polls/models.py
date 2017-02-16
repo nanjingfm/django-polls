@@ -16,7 +16,7 @@ class Question(models.Model):
     question_text = models.CharField(max_length=200, verbose_name='问题内容')
     desc_text = models.TextField(max_length=500, verbose_name='调查描述', default='', blank=True)
     pub_date = models.DateTimeField('发布时间')
-    img = models.ImageField(upload_to='polls/img/', default='', verbose_name='图片地址', blank=True)
+    img = models.ImageField(upload_to='polls/img/%Y%m', default='', verbose_name='图片地址', blank=True)
     status = models.IntegerField(default=1, choices=QUESTION_STATUS_CHOICES, verbose_name='状态')
 
     def __str__(self):

@@ -3,11 +3,17 @@
 {% block content %}
     <script src="//cdn.bootcss.com/echarts/3.4.0/echarts.common.min.js"></script>
     <div class="row">
-        <div class="col-xs-12" style="text-align: center">
+        <div class="col-xs-12 text-center">
             <h3><a href="{% url 'polls:vote' question.id %}">{{ question.question_text }}</a>
                 <small> 投票结果</small>
             </h3>
         </div>
+        <div class="col-xs-12" style="text-align: left">
+            <blockquote>
+                <p>{{ question.desc_text }}</p>
+            </blockquote>
+        </div>
+        <hr/>
         <div id="bar" class="col-md-6" style="height:400px;margin-bottom: 40px;"></div>
         <div id="pie" class="col-md-6" style="height:400px;margin-bottom: 40px;"></div>
     </div>
@@ -30,10 +36,6 @@
                 trigger: 'item'
             },
             calculable: true,
-            legend: {
-                data: ['投票数'],
-                right: '20'
-            },
             xAxis: {
                 axisLabel: {
                     textStyle: {
@@ -59,7 +61,10 @@
                         label: {
                             show: true,
                             position: 'top',
-                            formatter: '{c}'
+                            formatter: '{c}',
+                            textStyle: {
+                                fontSize: 16
+                            }
                         }
                     }
                 },
@@ -100,6 +105,13 @@
                         color: function (params) {
                             // build a color map as your need.
                             return colorList[params.dataIndex]
+                        },
+                        normal: {
+                            label: {
+                                textStyle: {
+                                    fontSize: 16
+                                }
+                            },
                         }
                     }
                 }
