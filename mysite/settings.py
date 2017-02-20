@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'polls',
 ]
 
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'polls.middlewares.common.CommonMiddleware'
 ]
 
@@ -126,3 +128,4 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = 'media/'
 
 MEDIA_URL = '/media/'
+INTERNAL_IPS = ['127.0.0.1']
