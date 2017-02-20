@@ -1,0 +1,9 @@
+{% for question in questions %}
+    <li class="list-group-item">
+        <a href="{% url 'polls:detail' question.id %}" class="text-muted">
+            <span class="glyphicon glyphicon-unchecked"></span> {{ question.question_text }}
+        </a>
+        </li>
+{% empty %}
+    暂无数据
+{% endfor %}

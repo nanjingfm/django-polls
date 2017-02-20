@@ -1,9 +1,11 @@
 #coding: utf-8
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import Question, Choice
+
 # Create your views here.
 
 @require_http_methods(['GET'])
@@ -54,3 +56,17 @@ def search(request):
         })
     else:
         return HttpResponseRedirect(reverse('polls:index'))
+
+@require_http_methods(['GET'])
+def topFivePolls(request):
+    questions = Question.objects.order_by('-pub_date').filter(status=Question.ACTIVE)[:5]
+    return render(request, "topfivepolls.html", {
+        'questions': questions
+    })
+
+
+@require_http_methods(['GET'])
+def jsconfig(request):
+    jsconfig = ''
+    jsconfig += 'var topfivepolls = \'' + reverse('polls:topfivepolls') + '\';'
+    return HttpResponse(jsconfig)
