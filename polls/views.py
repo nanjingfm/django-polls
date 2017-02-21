@@ -4,6 +4,8 @@ from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.db.models import Count
+
 from .models import Question, Choice
 
 # Create your views here.
@@ -59,7 +61,7 @@ def search(request):
 
 @require_http_methods(['GET'])
 def topFivePolls(request):
-    questions = Question.objects.order_by('-pub_date').filter(status=Question.ACTIVE)[:5]
+    questions = Question.q_objects.getTopFivePolls()
     return render(request, "topfivepolls.html", {
         'questions': questions
     })

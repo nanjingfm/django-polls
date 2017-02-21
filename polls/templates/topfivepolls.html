@@ -1,5 +1,8 @@
 {% for question in questions %}
     <li class="list-group-item">
+        {% if question.isHot %}
+            <span class="badge visible-lg" style="background-color: red;">hot</span>
+        {% endif %}
         <a href="{% url 'polls:detail' question.id %}" class="text-muted">
             <span class="glyphicon glyphicon-unchecked"></span> {{ question.question_text }}
         </a>

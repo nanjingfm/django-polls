@@ -4,10 +4,13 @@
     {% for question in questions %}
     <ul class="list-group">
         <li class="list-group-item">
+            {% if question.was_published_recently %}
+                <span class="badge visible-lg" style="background-color: red;">new</span>
+            {% endif %}
             <span class="badge visible-lg">{{ question.getVotesNum }}</span>
             <h3 class="list-group-item-heading"><a href="{% url 'polls:vote' question.id %}">{{ question.question_text }}</a></h3>
             {% if question.hasImg %}
-                <img class="img-responsive" style="max-height: 230px; margin-bottom: 10px; margin-top: 20px; border-radius: 10px;" src="/media/{{ question.img }}">
+                <img class="img-responsive" style="margin-left: auto; margin-right: auto;max-height: 230px; margin-bottom: 10px; margin-top: 20px; border-radius: 10px;" src="/media/{{ question.img }}">
             {% endif %}
             <p>
                 {{ question.desc_text }}

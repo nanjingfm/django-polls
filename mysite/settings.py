@@ -125,6 +125,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
+    ('common', os.path.join(BASE_DIR, 'static')),
     ('plugin', os.path.join(BASE_DIR, 'static/plugin')),
 ]
 
